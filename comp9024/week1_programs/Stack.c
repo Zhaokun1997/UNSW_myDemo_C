@@ -29,7 +29,7 @@ int StackIsEmpty()
 
 void StackPush(char ch)
 {
-    assert(stackObject.top < MAXITEMS - 1);
+    assert(stackObject.top < MAXITEMS - 1); // assert(test) terminates program with error message if test fails
     stackObject.top++;
     int i;
     i = stackObject.top;
@@ -46,3 +46,4 @@ char StackPop()
     stackObject.top--;
     return ch;
 }
+
