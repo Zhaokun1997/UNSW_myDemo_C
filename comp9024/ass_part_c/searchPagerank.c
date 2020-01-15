@@ -111,14 +111,14 @@ UrlU *insertUrlNodeByOrder(UrlU *list, char *url_name, int freq, float pageRank)
         // case 2: L.freq = new.freq
         else if (curr != NULL && curr->freq == freq)
         {
-//            printf("now, prev is : %p\n", prev);
-//            printf("now, curr is : %p\n", curr);
+            //            printf("now, prev is : %p\n", prev);
+            //            printf("now, curr is : %p\n", curr);
             while (curr != NULL && curr->freq >= freq && curr->pageRank > pageRank)
             {
                 prev = curr;
                 curr = curr->next;
-//                printf("now, prev is : %p\n", prev);
-//                printf("now, curr is : %p\n", curr);
+                //                printf("now, prev is : %p\n", prev);
+                //                printf("now, curr is : %p\n", curr);
             }
             if (prev == NULL)
             {
@@ -251,15 +251,15 @@ UrlU *getResultList(UrlU *list)
     UrlU *result_list = NULL;
     UrlU *temp;
     temp = list;
-    printf("insert order is following : \n");
+    //    printf("insert order is following : \n");
     while (temp != NULL)
     {
-        printf("%s\n", temp->name);
+        //        printf("%s\n", temp->name);
         result_list = insertUrlNodeByOrder(result_list, temp->name, temp->freq, temp->pageRank); // insert by order
-        showUrlList(result_list);
+                                                                                                 //        showUrlList(result_list);
         temp = temp->next;
     }
-    printf("\n");
+    //    printf("\n");
     //    showUrlList(result_list); // print
     return result_list;
 }
@@ -304,6 +304,8 @@ UrlU *findMatchedUrls(const char *file_name, const char *query_words[], int nb_q
             begin = insertQueryNode(begin, first_token, head);
         }
     }
+
+    fclose(invertedFile);
     UrlU *matched_list = NULL;
     QueryWordQ *temp_q = NULL;
     UrlU *temp_u = NULL;
@@ -335,7 +337,7 @@ UrlU *findMatchedUrls(const char *file_name, const char *query_words[], int nb_q
         }
         temp_q = temp_q->next;
     }
-    showWordList(begin);
+    //    showWordList(begin);
     freeWordList(begin);
 
     return matched_list;
@@ -343,11 +345,11 @@ UrlU *findMatchedUrls(const char *file_name, const char *query_words[], int nb_q
 
 UrlU *findPageRank(const char *file_name, UrlU *matchedList)
 {
-    char delim[3] = ", ";
-    char *urlName;
+    char urlName[MAXWORD];
+    char str_outdegree[MAXWORD];
+    char str_pageRank[MAXWORD];
     int outdegree;
     float pageRank;
-    char line[MAXSTRING];
     FILE *pagerankListFile;
     if ((pagerankListFile = fopen(file_name, "r")) == NULL)
     {
@@ -356,13 +358,22 @@ UrlU *findPageRank(const char *file_name, UrlU *matchedList)
     }
 
     UrlU *new_list = NULL; // result list
-    while (fgets(line, MAXSTRING, pagerankListFile) != NULL)
+    while (!feof(pagerankListFile))
     {
+        //        printf("--------\n");
         // first word -- urlName
         // line[strlen(line) - 1] = '\0';  // check txt file if there is a '\n' at the end of file
-        urlName = strtok(line, delim);
-        outdegree = atoi(strtok(NULL, delim));
-        pageRank = atof(strtok(NULL, delim));
+        fscanf(pagerankListFile, "%s", urlName);
+        fscanf(pagerankListFile, "%s", str_outdegree);
+        fscanf(pagerankListFile, "%s", str_pageRank);
+        // remove comma
+        urlName[strlen(urlName) - 1] = '\0';
+        str_outdegree[strlen(str_outdegree) - 1] = '\0';
+        //                printf("%s   %s   %s\n", urlName, str_outdegree, str_pageRank);
+
+        outdegree = atoi(str_outdegree);
+        pageRank = atof(str_pageRank);
+        //                printf("%d   %f\n", outdegree, pageRank);
         if (inUrlList(matchedList, urlName) == 1) // if urlname is in list
         {
             // give values
@@ -381,10 +392,11 @@ UrlU *findPageRank(const char *file_name, UrlU *matchedList)
         }
         // else : do nothing
     }
+    fclose(pagerankListFile);
     // by now, list have enough data to sort
-    printf("matchedList is : \n");
-    showUrlList(matchedList);
-    printf("\n");
+    //    printf("matchedList is : \n");
+    //    showUrlList(matchedList);
+    //    printf("\n");
     new_list = getResultList(matchedList);
 
     return new_list;
@@ -407,6 +419,7 @@ int main(int argc, const char *argv[])
 
     UrlU *matchedList = findMatchedUrls("invertedIndex.txt", query_words, nb_query_words); // list contain freq
     UrlU *result = findPageRank("pagerankList.txt", matchedList);
+    printf("\n");
     showUrlList(result);
     freeUrlList(matchedList);
     freeUrlList(result);
