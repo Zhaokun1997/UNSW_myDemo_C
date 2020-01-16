@@ -67,5 +67,8 @@ int main(int argc, const char *argv[])
     }
     printf("%s\n", str1);
 
+    printf("%f\n", (1.0+3)/7);
+    
+
     return 0;
 }
