@@ -1,8 +1,4 @@
 
-            
-        
-    
-
 
 //
 //  pagerank.c
@@ -74,9 +70,9 @@ int main(int argc, const char *argv[])
     float d = atof(argv[1]);
     float diffPR = atof(argv[2]);
     int maxIterations = atoi(argv[3]);
-    printf("d(argv[1]): %f\n", d);
-    printf("diffPR(argv[2]): %f\n", diffPR);
-    printf("maxIterations(argv[3]): %d\n", maxIterations);
+    //    printf("d(argv[1]): %f\n", d);
+    //    printf("diffPR(argv[2]): %f\n", diffPR);
+    //    printf("maxIterations(argv[3]): %d\n", maxIterations);
 
     const char *fname = "collection.txt";
     char urlName[MAXURLNAME];
@@ -122,7 +118,7 @@ int main(int argc, const char *argv[])
             printf("Failed to open url file.\n");
             return (0);
         }
-        printf("\n%s has been accessed successfully.\n", FileName);
+        //        printf("\n%s has been accessed successfully.\n", FileName);
 
         // read section-1:
         char beginWord[MAXURLNAME];
@@ -154,14 +150,15 @@ int main(int argc, const char *argv[])
                 }
             }
         }
+        fclose(urlFile);
     }
-    showGraph(g);
+    //    showGraph(g);
 
     // initialise pageranks
     for (int i = 0; i < nb_of_urls; i++)
     {
         urlNodeList[i]->pageRank = 1.0 / nb_of_urls; // float
-        printf("name: %s, outdegree: %d, pagerank: %f\n", urlNodeList[i]->urlName, urlNodeList[i]->outDegree, urlNodeList[i]->pageRank);
+                                                     //        printf("name: %s, outdegree: %d, pagerank: %f\n", urlNodeList[i]->urlName, urlNodeList[i]->outDegree, urlNodeList[i]->pageRank);
     }
 
     // calculate pageranks
@@ -199,14 +196,56 @@ int main(int argc, const char *argv[])
             urlNodeList[i]->pageRank = newPageRank[i];
         }
     }
-    
-    printf("\n\n");
+
+    //    printf("\n");
+    //    for (int i = 0; i < nb_of_urls; i++)
+    //    {
+    //        printf("name: %s, outdegree: %d, pagerank: %f\n", urlNodeList[i]->urlName, urlNodeList[i]->outDegree, urlNodeList[i]->pageRank);
+    //    }
+
+    // bubble sort
+    int sortList[nb_of_urls];
     for (int i = 0; i < nb_of_urls; i++)
     {
-        printf("name: %s, outdegree: %d, pagerank: %f\n", urlNodeList[i]->urlName, urlNodeList[i]->outDegree, urlNodeList[i]->pageRank);
+        sortList[i] = i;
     }
-    
-    
+    int temp;
+    for (int i = 0; i < nb_of_urls - 1; i++)
+    {
+        for (int j = 0; j < nb_of_urls - i - 1; j++)
+        {
+            if (urlNodeList[sortList[j]]->pageRank < urlNodeList[sortList[j + 1]]->pageRank)
+            {
+                temp = sortList[j];
+                sortList[j] = sortList[j + 1];
+                sortList[j + 1] = temp;
+            }
+        }
+    }
+
+    //    printf("\nafter sorting : \n");
+    //    for (int i = 0; i < nb_of_urls; i++)
+    //    {
+    //        printf("name: %s, outdegree: %d, pagerank: %f\n", urlNodeList[sortList[i]]->urlName, urlNodeList[sortList[i]]->outDegree, urlNodeList[sortList[i]]->pageRank);
+    //    }
+
+    // write to pagerankList.txt
+    FILE *fp;
+    const char *pagerankFile = "pagerankList.txt";
+    if ((fp = fopen(pagerankFile, "w+")) == NULL)
+    {
+        printf("Failed to open file pagerankList.txt.\n");
+        exit(1);
+    }
+
+    //    printf("begin to write results to file.\n");
+    for (int i = 0; i < nb_of_urls; i++)
+    {
+        fprintf(fp, "%s, %d, %.7f\n", urlNodeList[sortList[i]]->urlName, urlNodeList[sortList[i]]->outDegree, urlNodeList[sortList[i]]->pageRank);
+    }
+    //    printf("finished to write results");
+    fclose(fp);
+
     freeUrlNodeList(urlNodeList, nb_of_urls);
     freeGraph(g);
 
