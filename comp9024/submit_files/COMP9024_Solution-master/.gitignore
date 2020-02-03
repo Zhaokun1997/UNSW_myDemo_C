@@ -1,0 +1,8 @@
+*.e
+.idea
+*.o
+*.out
+*.gch
+*.log
+*.test
+assignment1/listIteratorInt.c

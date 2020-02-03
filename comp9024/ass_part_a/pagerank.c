@@ -161,6 +161,13 @@ int main(int argc, const char *argv[])
                                                      //        printf("name: %s, outdegree: %d, pagerank: %f\n", urlNodeList[i]->urlName, urlNodeList[i]->outDegree, urlNodeList[i]->pageRank);
     }
 
+    //    printf("\n");
+    //    for (int i = 0; i < nb_of_urls; i++)
+    //    {
+    //        printf("name: %s, outdegree: %d, pagerank: %f\n", urlNodeList[i]->urlName, urlNodeList[i]->outDegree, urlNodeList[i]->pageRank);
+    //    }
+    //    printf("\n");
+
     // calculate pageranks
     int iteration = 0;
     float diff = diffPR;           // to enter the following loop
@@ -195,13 +202,14 @@ int main(int argc, const char *argv[])
         {
             urlNodeList[i]->pageRank = newPageRank[i];
         }
-    }
 
-    //    printf("\n");
-    //    for (int i = 0; i < nb_of_urls; i++)
-    //    {
-    //        printf("name: %s, outdegree: %d, pagerank: %f\n", urlNodeList[i]->urlName, urlNodeList[i]->outDegree, urlNodeList[i]->pageRank);
-    //    }
+        //        printf("\n");
+        //        for (int i = 0; i < nb_of_urls; i++)
+        //        {
+        //            printf("name: %s, outdegree: %d, pagerank: %f\n", urlNodeList[i]->urlName, urlNodeList[i]->outDegree, urlNodeList[i]->pageRank);
+        //        }
+        //        printf("\n");
+    }
 
     // bubble sort
     int sortList[nb_of_urls];
