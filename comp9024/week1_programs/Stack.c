@@ -17,33 +17,27 @@ typedef struct
 
 static stackRep stackObject;
 
-void StackInit()
+void StackInit(void)
 {
     stackObject.top = -1;
 }
 
-int StackIsEmpty()
+int StackIsEmpty(void)
 {
     return (stackObject.top < 0);
 }
 
 void StackPush(char ch)
 {
-    assert(stackObject.top < MAXITEMS - 1); // assert(test) terminates program with error message if test fails
+    assert(stackObject.top < MAXITEMS - 1);
     stackObject.top++;
-    int i;
-    i = stackObject.top;
-    stackObject.item[i] = ch;
+    stackObject.item[stackObject.top] = ch;
 }
 
-char StackPop()
+char StackPop(void)
 {
     assert(stackObject.top > -1);
-    int i;
-    char ch;
-    i = stackObject.top;
-    ch = stackObject.item[i];
+    char popValue = stackObject.item[stackObject.top];
     stackObject.top--;
-    return ch;
+    return popValue;
 }
-

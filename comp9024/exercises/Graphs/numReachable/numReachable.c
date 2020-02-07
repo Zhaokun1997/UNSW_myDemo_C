@@ -39,7 +39,7 @@ int numReachable(Graph g, int src)
             total = total + nbReachable(g, i, visited, nV);
         }
     }
-    total++;
+    total++; // for source node itself
 
     return total;
 }

@@ -30,6 +30,4 @@ int TreeSumOdds(Tree t)
             return t->value + sumleft + sumright;
         }
     }
-
-    return 0;
 }

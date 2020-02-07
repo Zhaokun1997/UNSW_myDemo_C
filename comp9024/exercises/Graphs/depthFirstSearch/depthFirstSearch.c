@@ -4,6 +4,9 @@
 
 #include "Graph.h"
 
+// #define MAX_NODES 100
+// int visited[MAX_NODES];
+
 void depthFirstPrint(Graph g, int v, int *visited, int nV)
 {
     visited[v] = 1;
